@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const app = express();
+const cors = require("cors");
 const allRoutes = require('./routes');
 
 const PORT = process.env.PORT || 3000;
@@ -14,6 +15,14 @@ if (!fs.existsSync(uploadDir)) {
 }
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 // Middleware untuk parsing JSON
 app.use(express.json());
