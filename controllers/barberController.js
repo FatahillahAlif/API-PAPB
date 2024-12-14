@@ -17,6 +17,7 @@ const barberController = {
         return res.status(400).json({ message: "File gambar wajib diunggah!" });
       }
 
+      console.log(req.file)
       // Mendapatkan URL gambar dari req.file
       const image_url = `/uploads/images/${req.file.filename}`;
 
