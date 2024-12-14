@@ -216,6 +216,38 @@ const authController = {
         .json({ message: "Internal server error", error: error.message });
     }
   },
+  
+  deleteAccount: async (req, res) => {
+    try {
+      const { email, password } = req.body;
+
+      // Validasi input
+      if (!email || !password) {
+        return res.status(400).json({ message: "Email dan password wajib diisi!" });
+      }
+
+      // Cari user berdasarkan email
+      const user = await User.findOne({ where: { email } });
+      if (!user) {
+        return res.status(404).json({ message: "User tidak ditemukan!" });
+      }
+
+      // Verifikasi password
+      const isPasswordValid = await bcrypt.compare(password, user.password_hash);
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: "Password salah!" });
+      }
+
+      // Hapus akun pengguna
+      await user.destroy();
+
+      res.status(200).json({
+        message: "Akun berhasil dihapus. Kami sedih melihat Anda pergi!",
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+  },
 };
 
 module.exports = authController;
